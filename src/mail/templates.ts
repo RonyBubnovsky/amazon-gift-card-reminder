@@ -49,7 +49,7 @@ export function failureAlertEmail(product: Product, state: ProductState, timeZon
       `Last known status: ${label(state.availability)}`,
       `Link: ${product.url}`,
       ``,
-      `Checks keep running every hour. You will get another alert only after a`,
+      `Checks keep running every 30 minutes. You will get another alert only after a`,
       `successful check followed by a new streak of failures.`,
     ].join("\n"),
   };

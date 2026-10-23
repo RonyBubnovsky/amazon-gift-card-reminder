@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Hourly Amazon stock checker that emails on status changes, sends a daily summary, and alerts on repeated failures.",
+  "description": "Amazon stock checker (every 30 minutes) that emails on status changes, sends a daily summary, and alerts on repeated failures.",
   "engines": {
     "node": "22.x"
   },

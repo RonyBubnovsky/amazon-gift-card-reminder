@@ -1,13 +1,13 @@
 # Amazon Gift Card Reminder: Project Documentation
 
-Checks Amazon product pages every hour. Emails you when a product comes in stock (or goes out of
+Checks Amazon product pages every 30 minutes. Emails you when a product comes in stock (or goes out of
 stock), sends one daily summary, and alerts you if checks keep failing. Runs 24/7 on free tiers:
-Vercel (function), cron-job.org (hourly trigger), Upstash Redis (state), Gmail (email).
+Vercel (function), cron-job.org (30-minute trigger), Upstash Redis (state), Gmail (email).
 
 ## How it works
 
 ```
-cron-job.org (hourly) --GET /api/check + Bearer token--> Vercel function --> 202 Accepted
+cron-job.org (every 30 min) --GET /api/check + Bearer token--> Vercel function --> 202 Accepted
                                                               |  (continues in background)
                                    for each product: amazon.in homepage -> product page
                                    parse -> compare with last state (Upstash Redis)
@@ -19,7 +19,7 @@ cron-job.org (hourly) --GET /api/check + Bearer token--> Vercel function --> 202
 |---|---|
 | Now watching | First successful check of a product |
 | ✅ In stock / ❌ Out of stock again | Status changed since the last successful check |
-| ⚠️ Checks failing | Exactly 3 failed checks in a row (one alert per failure streak) |
+| ⚠️ Checks failing | Exactly 3 failed checks in a row, about 1.5 hours (one alert per failure streak) |
 | Daily summary | First run at or after `SUMMARY_HOUR`, once per day |
 
 A check **fails** when, after 3 attempts, Amazon still returns a bot page, an HTTP error, a timeout,
@@ -70,7 +70,7 @@ Functions run in `bom1` (Mumbai, close to amazon.in), set in `vercel.json`.
 
 **Create cronjob**:
 - URL: `https://<project>.vercel.app/api/check`
-- Schedule: every hour, at minute `0`
+- Schedule: every 30 minutes, at minutes `0` and `30`
 - **Advanced → Headers**: `Authorization` = `Bearer <CRON_SECRET>`
 - Request method: `GET`
 - Notifications: enable "on failure" so you hear about it if the endpoint itself breaks.
@@ -85,9 +85,9 @@ Functions run in `bom1` (Mumbai, close to amazon.in), set in `vercel.json`.
 
 ## Free-tier usage
 
-- Vercel Hobby: 24 invocations a day, a few seconds each, far below the limits. Hobby is for personal,
+- Vercel Hobby: 48 invocations a day, a few seconds each, far below the limits. Hobby is for personal,
   non-commercial use.
-- Upstash: about 3 commands per product per run (roughly 2-5k a month); the free tier allows 500k a month.
+- Upstash: about 3 commands per product per run (roughly 4-9k a month); the free tier allows 500k a month.
 - Gmail: a handful of emails a day; the sending limit is 500 a day.
 
 ## Troubleshooting

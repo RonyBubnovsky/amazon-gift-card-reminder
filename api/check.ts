@@ -4,7 +4,7 @@ import { loadConfig, type Config } from "../src/config.js";
 import { runCheck } from "../src/runCheck.js";
 
 /**
- * Hourly entry point, called by cron-job.org with `Authorization: Bearer <CRON_SECRET>`.
+ * Entry point, called every 30 minutes by cron-job.org with `Authorization: Bearer <CRON_SECRET>`.
  * Responds 202 immediately and finishes the check in the background, because Amazon
  * retries can outlast cron-job.org's request timeout.
  */

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Hourly Amazon stock checker. Vercel serverless function (`api/check.ts`), triggered by cron-job.org,
+Amazon stock checker, runs every 30 minutes. Vercel serverless function (`api/check.ts`), triggered by cron-job.org,
 state in Upstash Redis, notifications via Gmail SMTP (Nodemailer). Full docs: `PROJECT_DOCUMENTATION.md`.
 
 ## Commands
